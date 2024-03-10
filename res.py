@@ -1,34 +1,9 @@
-from itertools import combinations
-global n;n = 1
-numeros = list(range(1, 10))
-combinaciones = [combinacion for combinacion in combinations(numeros, 4) if sum(combinacion) == 22]
-for ls1 in combinaciones:
-    for ls2 in combinaciones:
-        if ls1 != ls2 and len(set(ls1) & set(ls2)) == 2:
-            i1,i2 = set(ls1) & set(ls2)
-            l1,l2 = ([x for x in ls if x not in (i1, i2)] for ls in (ls1, ls2))
-            l1[1:1], l2[1:1] = (i2, i1), (i2, i1)
-
-            def comp(f1,f2):
-                global n
-                dif16 = 16-(f1[0] + f1[1])
-                dif14 = 14-(f1[1] + f1[2])
-                dif13 = 13-(f2[0] + f2[1])
-                dif15 = 15-(f2[1] + f2[2])
-
-                if dif16 == dif14 and dif13 == dif15 and len(set((*f1,*f2,dif16,dif13))) > 7:
-                    print(f1,f2,dif16,dif13,"n:",n);n+=1
-
-
-            f1 = [l1[0],i1,l2[0]]
-            f2 = [l1[-1],i2,l2[-1]]
-            comp(f1,f2)
-            f1 = [l1[0],i2,l2[0]]
-            f2 = [l1[-1],i1,l2[-1]]
-            comp(f1,f2)
-            f1 = [l2[0],i2,l1[0]]
-            f2 = [l1[-1],i1,l2[-1]]
-            comp(f1,f2)
-            f1 = [l2[0],i1,l1[0]]
-            f2 = [l2[-1],i2,l1[-1]]
-            comp(f1,f2)
+from itertools import combinations, permutations, product
+combin = [i for i in combinations(list(range(1,10)),4) if sum(i)==22]
+print(list([16-(l[0]+m[0]),l[2:],m,l[:2],13-(l[1]+m[1])]
+        for (j, l1), (k, l2) in product(enumerate(combin), repeat=2)
+        if j>k and len(set(l1)&set(l2)) == 2
+        for l in permutations(tuple(set(l1)^set(l2)))
+        for m in permutations(tuple(set(l1)&set(l2)))
+        if 0<16-(l[0]+m[0])==14-(l[2]+m[0]) not in (l+m) and
+           0<13-(l[1]+m[1])==15-(l[3]+m[1]) not in (l+m)))
